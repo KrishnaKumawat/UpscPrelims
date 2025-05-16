@@ -3,228 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UPSC Prelims Mock Test</title>
+  <title>UPSC Mock Test - Landing Page</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #e8f0fe;
+      background-color: #f0f4f8;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
     .container {
       max-width: 800px;
-      margin: 30px auto;
+      margin: auto;
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     h2, h3 {
       text-align: center;
     }
-    .question {
-      margin: 20px 0;
-      padding: 15px;
-      background: #f9f9f9;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .options label {
+    label, select, input {
       display: block;
-      margin: 6px 0;
-      cursor: pointer;
-    }
-    input[type="radio"] {
-      margin-right: 8px;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 16px;
     }
     button {
-      display: block;
-      margin: 20px auto;
-      padding: 12px 24px;
+      margin-top: 20px;
+      padding: 10px;
       font-size: 16px;
-      background-color: #4285f4;
+      width: 100%;
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #3367d6;
+      background-color: #0056b3;
     }
-    #timer {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
-      font-size: 18px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
     }
-    .result {
-      text-align: center;
-      font-size: 20px;
-      color: #2e7d32;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
     }
-    .feedback {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
-    .correct {
-      color: green;
-    }
-    .wrong {
-      color: red;
+    th {
+      background-color: #e0e0e0;
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <div id="loginSection">
-    <h2>UPSC Prelims Mock Test</h2>
-    <label for="studentName">Enter Your Name:</label>
-    <input type="text" id="studentName" placeholder="Your Name" style="width:100%; padding:10px; font-size:16px;">
-    <button id="startBtn">Start Test</button>
-  </div>
+  <h2>UPSC Mock Test</h2>
 
-  <div id="testSection" style="display: none;">
-    <h3>Welcome, <span id="userDisplay"></span></h3>
-    <div id="timer">Time Left: <span id="time">10:00</span></div>
-    <form id="quizForm"></form>
-    <button id="submitBtn">Submit Test</button>
-  </div>
+  <label for="studentName">Enter Your Name:</label>
+  <input type="text" id="studentName" placeholder="Your Name">
 
-  <div id="resultSection" style="display:none;">
-    <h3>Test Completed!</h3>
-    <div class="result" id="score"></div>
-    <div id="feedbackContainer"></div>
-    <button id="downloadBtn">Download Result JSON</button>
-  </div>
+  <label for="subjectSelect">Select Subject:</label>
+  <select id="subjectSelect">
+    <option value="polity">Indian Polity</option>
+    <option value="history">History</option>
+    <option value="geography">Geography</option>
+    <option value="economy">Economy</option>
+    <option value="science">Science & Tech</option>
+  </select>
+
+  <button onclick="startTest()">Start Test</button>
+
+  <h3>Previous Test Submissions</h3>
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Score</th>
+        <th>Total</th>
+        <th>Subject</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Results will appear here -->
+    </tbody>
+  </table>
 </div>
 
 <script>
-const questions = [
-  {
-    q: "Which words were added to the Preamble by the 42nd Amendment?",
-    options: ["Sovereign and Democratic", "Socialist and Secular", "Republic and Justice", "Liberty and Fraternity"],
-    answer: 1
-  },
-  {
-    q: "Judicial Review is taken from which country's constitution?",
-    options: ["United Kingdom", "Ireland", "United States of America", "Australia"],
-    answer: 2
-  },
-  {
-    q: "Which river flows through a rift valley?",
-    options: ["Yamuna", "Narmada", "Godavari", "Ganga"],
-    answer: 1
-  }
-];
-
-let timerInterval;
-let timeLeft = 600; // 10 minutes
-let studentName = "";
-let finalResult = {};
-
-const scriptURL = "https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec";
-
-document.getElementById("startBtn").onclick = () => {
-  const name = document.getElementById("studentName").value.trim();
+function startTest() {
+  const name = document.getElementById('studentName').value.trim();
+  const subject = document.getElementById('subjectSelect').value;
   if (!name) {
-    alert("Please enter your name");
+    alert("Please enter your name.");
     return;
   }
-  studentName = name;
-  document.getElementById("userDisplay").textContent = name;
-  document.getElementById("loginSection").style.display = 'none';
-  document.getElementById("testSection").style.display = 'block';
-  startTimer();
-  renderQuestions();
-};
-
-document.getElementById("submitBtn").onclick = () => {
-  clearInterval(timerInterval);
-  showResults();
-};
-
-document.getElementById("downloadBtn").onclick = () => {
-  const blob = new Blob([JSON.stringify(finalResult, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${studentName.replaceAll(' ', '_')}_UPSC_Result.json`;
-  a.click();
-};
-
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    document.getElementById("time").textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      showResults();
-    }
-  }, 1000);
+  localStorage.setItem("studentName", name);
+  localStorage.setItem("selectedSubject", subject);
+  window.location.href = `test-${subject}.html`;
 }
 
-function renderQuestions() {
-  const quizForm = document.getElementById("quizForm");
-  questions.forEach((q, index) => {
-    const div = document.createElement("div");
-    div.className = "question";
-    div.innerHTML = `<p><strong>Q${index + 1}.</strong> ${q.q}</p>`;
-    q.options.forEach((opt, i) => {
-      div.innerHTML += `<div class="options"><label><input type="radio" name="q${index}" value="${i}"> ${opt}</label></div>`;
+const sheetUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/gviz/tq?tqx=out:json';
+fetch(sheetUrl)
+  .then(res => res.text())
+  .then(data => {
+    const json = JSON.parse(data.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+    const tableBody = document.getElementById('tableBody');
+
+    rows.forEach(row => {
+      const name = row.c[0]?.v || '';
+      const score = row.c[1]?.v || '';
+      const total = row.c[2]?.v || '';
+      const timestamp = row.c[3]?.v || '';
+      let subject = 'General';
+
+      try {
+        const responses = JSON.parse(row.c[4]?.v || '[]');
+        subject = row.c[5]?.v || responses[0]?.subject || 'General';
+      } catch {}
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${name}</td>
+        <td>${score}</td>
+        <td>${total}</td>
+        <td>${subject}</td>
+        <td>${timestamp}</td>
+      `;
+      tableBody.appendChild(tr);
     });
-    quizForm.appendChild(div);
-  });
-}
-
-function showResults() {
-  document.getElementById("testSection").style.display = 'none';
-  document.getElementById("resultSection").style.display = 'block';
-  const form = document.getElementById("quizForm");
-  let score = 0;
-  const feedbackContainer = document.getElementById("feedbackContainer");
-  feedbackContainer.innerHTML = '';
-
-  const responses = [];
-
-  questions.forEach((q, i) => {
-    const userAnswer = form[`q${i}`].value;
-    const correct = parseInt(userAnswer) === q.answer;
-    if (correct) score++;
-    const div = document.createElement("div");
-    div.className = 'feedback';
-    div.innerHTML = `Q${i + 1}. ${q.q}<br><span class="${correct ? 'correct' : 'wrong'}">Your Answer: ${q.options[userAnswer] || 'Not Answered'}<br>Correct Answer: ${q.options[q.answer]}</span><br><br>`;
-    feedbackContainer.appendChild(div);
-
-    responses.push({
-      question: q.q,
-      selected: q.options[userAnswer] || 'Not Answered',
-      correct: q.options[q.answer],
-      isCorrect: correct
-    });
-  });
-
-  document.getElementById("score").textContent = `You scored ${score} out of ${questions.length}`;
-
-  finalResult = {
-    name: studentName,
-    score: score,
-    total: questions.length,
-    timestamp: new Date().toISOString(),
-    responses: responses
-  };
-
-  // Send data to Google Sheets
-  fetch(scriptURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(finalResult)
   })
-  .then(response => console.log('Submitted to Google Sheets'))
-  .catch(error => console.error('Error submitting to Sheets:', error));
-}
+  .catch(err => console.error("Error loading sheet data", err));
 </script>
 </body>
 </html>
