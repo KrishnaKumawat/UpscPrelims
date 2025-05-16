@@ -2,141 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UPSC Mock Test - Landing Page</title>
+  <title>UPSC Mock Test - Home</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    h2, h3 {
-      text-align: center;
-    }
-    label, select, input {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px;
-      font-size: 16px;
-      width: 100%;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #e0e0e0;
-    }
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    h1, h2 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 10px; }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>UPSC Mock Test</h2>
-
-  <label for="studentName">Enter Your Name:</label>
-  <input type="text" id="studentName" placeholder="Your Name">
-
-  <label for="subjectSelect">Select Subject:</label>
-  <select id="subjectSelect">
-    <option value="polity">Indian Polity</option>
-    <option value="history">History</option>
-    <option value="geography">Geography</option>
-    <option value="economy">Economy</option>
-    <option value="science">Science & Tech</option>
+  <h1>UPSC Mock Test</h1>
+  <input type="text" id="studentName" placeholder="Enter your name" required>
+  <select id="subject">
+    <option value="">Select Subject</option>
+    <option value="History">History</option>
+    <option value="Geography">Geography</option>
+    <option value="Polity">Polity</option>
+    <option value="Economics">Economics</option>
   </select>
-
   <button onclick="startTest()">Start Test</button>
 
-  <h3>Previous Test Submissions</h3>
+  <h2>Previous Results</h2>
   <table id="resultsTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Score</th>
-        <th>Total</th>
-        <th>Subject</th>
-        <th>Timestamp</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-      <!-- Results will appear here -->
-    </tbody>
+    <thead><tr><th>Name</th><th>Subject</th><th>Score</th></tr></thead>
+    <tbody></tbody>
   </table>
-</div>
 
-<script>
-function startTest() {
-  const name = document.getElementById('studentName').value.trim();
-  const subject = document.getElementById('subjectSelect').value;
-  if (!name) {
-    alert("Please enter your name.");
-    return;
-  }
-  localStorage.setItem("studentName", name);
-  localStorage.setItem("selectedSubject", subject);
-  window.location.href = `test-${subject}.html`;
-}
-  
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/gviz/tq?tqx=out:json';
-fetch(sheetUrl)
-  .then(res => res.text())
-  .then(data => {
-    const json = JSON.parse(data.substring(47).slice(0, -2));
-    const rows = json.table.rows;
-    const tableBody = document.getElementById('tableBody');
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec';
 
-    rows.forEach(row => {
-      const name = row.c[0]?.v || '';
-      const score = row.c[1]?.v || '';
-      const total = row.c[2]?.v || '';
-      const timestamp = row.c[3]?.v || '';
-      let subject = 'General';
+    function startTest() {
+      const name = document.getElementById('studentName').value;
+      const subject = document.getElementById('subject').value;
+      if (!name || !subject) return alert("Please enter your name and select a subject.");
+      localStorage.setItem("studentName", name);
+      localStorage.setItem("subject", subject);
+      window.location.href = "questions.html";
+    }
 
-      try {
-        const responses = JSON.parse(row.c[4]?.v || '[]');
-        subject = row.c[5]?.v || responses[0]?.subject || 'General';
-      } catch {}
+    function loadResults() {
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector("#resultsTable tbody");
+          tbody.innerHTML = "";
+          data.forEach(row => {
+            tbody.innerHTML += `<tr><td>${row.name}</td><td>${row.subject}</td><td>${row.score}</td></tr>`;
+          });
+        });
+    }
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${name}</td>
-        <td>${score}</td>
-        <td>${total}</td>
-        <td>${subject}</td>
-        <td>${timestamp}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  })
-  .catch(err => console.error("Error loading sheet data", err));
-</script>
+    window.onload = loadResults;
+  </script>
 </body>
 </html>
