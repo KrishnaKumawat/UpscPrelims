@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UPSC Mock Test - Result</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; text-align: center; }
+    button { padding: 10px 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Your Result</h2>
+  <p id="resultText"></p>
+  <button onclick="goHome()">Back to Home</button>
+
+  <script>
+    const name = localStorage.getItem("studentName");
+    const subject = localStorage.getItem("subject");
+    const score = localStorage.getItem("score");
+    document.getElementById("resultText").innerText = `${name}, your score in ${subject} is ${score}/3.`;
+
+    function goHome() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
