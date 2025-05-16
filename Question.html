@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UPSC Mock Test - Questions</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    h2 { text-align: center; }
+    .question { margin-bottom: 15px; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Answer the Questions</h2>
+  <div id="questionList"></div>
+  <button onclick="submitTest()">Submit Test</button>
+
+  <script>
+    const questions = [
+      { q: 'What is the capital of India?', a: 'Delhi' },
+      { q: 'Who wrote the Constitution of India?', a: 'B.R. Ambedkar' },
+      { q: 'When is Independence Day?', a: '15 August' },
+    ];
+
+    function renderQuestions() {
+      const container = document.getElementById('questionList');
+      questions.forEach((item, index) => {
+        container.innerHTML += `<div class='question'>
+          <p>${index + 1}. ${item.q}</p>
+          <input type='text' data-answer="${item.a}" />
+        </div>`;
+      });
+    }
+
+    function submitTest() {
+      const inputs = document.querySelectorAll('input');
+      let score = 0;
+      inputs.forEach(input => {
+        if (input.value.trim().toLowerCase() === input.dataset.answer.toLowerCase()) {
+          score++;
+        }
+      });
+
+      const name = localStorage.getItem("studentName");
+      const subject = localStorage.getItem("subject");
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec';
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: new URLSearchParams({ name, subject, score })
+      });
+
+      localStorage.setItem("score", score);
+      window.location.href = "result.html";
+    }
+
+    renderQuestions();
+  </script>
+</body>
+</html>
