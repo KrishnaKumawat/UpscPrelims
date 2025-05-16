@@ -38,7 +38,7 @@
       if (!name || !subject) return alert("Please enter your name and select a subject.");
       localStorage.setItem("studentName", name);
       localStorage.setItem("subject", subject);
-      window.location.href = "questions.html";
+      window.location.href = "./questions.html"; // Use relative path for GitHub Pages compatibility
     }
 
     function loadResults() {
