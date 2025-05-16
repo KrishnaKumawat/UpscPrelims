@@ -95,6 +95,7 @@
     <h3>Test Completed!</h3>
     <div class="result" id="score"></div>
     <div id="feedbackContainer"></div>
+    <button id="downloadBtn">Download Result JSON</button>
   </div>
 </div>
 
@@ -119,6 +120,8 @@ const questions = [
 
 let timerInterval;
 let timeLeft = 600; // 10 minutes
+let studentName = "";
+let finalResult = {};
 
 document.getElementById("startBtn").onclick = () => {
   const name = document.getElementById("studentName").value.trim();
@@ -126,6 +129,7 @@ document.getElementById("startBtn").onclick = () => {
     alert("Please enter your name");
     return;
   }
+  studentName = name;
   document.getElementById("userDisplay").textContent = name;
   document.getElementById("loginSection").style.display = 'none';
   document.getElementById("testSection").style.display = 'block';
@@ -136,6 +140,15 @@ document.getElementById("startBtn").onclick = () => {
 document.getElementById("submitBtn").onclick = () => {
   clearInterval(timerInterval);
   showResults();
+};
+
+document.getElementById("downloadBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(finalResult, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${studentName.replaceAll(' ', '_')}_UPSC_Result.json`;
+  a.click();
 };
 
 function startTimer() {
@@ -172,6 +185,8 @@ function showResults() {
   const feedbackContainer = document.getElementById("feedbackContainer");
   feedbackContainer.innerHTML = '';
 
+  const responses = [];
+
   questions.forEach((q, i) => {
     const userAnswer = form[`q${i}`].value;
     const correct = parseInt(userAnswer) === q.answer;
@@ -180,9 +195,24 @@ function showResults() {
     div.className = 'feedback';
     div.innerHTML = `Q${i + 1}. ${q.q}<br><span class="${correct ? 'correct' : 'wrong'}">Your Answer: ${q.options[userAnswer] || 'Not Answered'}<br>Correct Answer: ${q.options[q.answer]}</span><br><br>`;
     feedbackContainer.appendChild(div);
+
+    responses.push({
+      question: q.q,
+      selected: q.options[userAnswer] || 'Not Answered',
+      correct: q.options[q.answer],
+      isCorrect: correct
+    });
   });
 
   document.getElementById("score").textContent = `You scored ${score} out of ${questions.length}`;
+
+  finalResult = {
+    name: studentName,
+    score: score,
+    total: questions.length,
+    timestamp: new Date().toISOString(),
+    responses: responses
+  };
 }
 </script>
 </body>
