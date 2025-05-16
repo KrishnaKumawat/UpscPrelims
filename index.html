@@ -123,6 +123,8 @@ let timeLeft = 600; // 10 minutes
 let studentName = "";
 let finalResult = {};
 
+const scriptURL = "https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec";
+
 document.getElementById("startBtn").onclick = () => {
   const name = document.getElementById("studentName").value.trim();
   if (!name) {
@@ -213,6 +215,15 @@ function showResults() {
     timestamp: new Date().toISOString(),
     responses: responses
   };
+
+  // Send data to Google Sheets
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(finalResult)
+  })
+  .then(response => console.log('Submitted to Google Sheets'))
+  .catch(error => console.error('Error submitting to Sheets:', error));
 }
 </script>
 </body>
