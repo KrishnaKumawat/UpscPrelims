@@ -101,10 +101,13 @@
         localStorage.setItem('mockResult', JSON.stringify(resultData));
         window.location.href = 'result.html';
       })
-      .catch(error => {
-        alert('❌ Failed to submit your test result. Please try again.');
-        console.error('Submission error:', error);
-      });
+      .catch(error => 
+        {
+          alert('❌ Failed to submit your test result. Check console for details.');
+          console.error('Submission error:', error);
+          console.log('Result data sent:', resultData);
+        });
+
     }
   </script>
 </body>
