@@ -28,7 +28,7 @@
     const total = parseInt(userData.questions);
     let loadedQuestions = [];
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw_XxdV-OE54A2kocUvhj9L2H9lHDaugEErfbSOFWbQgu2S5kcCj7lGU3YPifAR7MK8/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzmsThdloSlIvIgwCDstlFXof-boKjSvKbG0ac0kb45RhII4xo6kJRYFGPE239XcfxA/exec';
 
     fetch(`${scriptURL}?subject=${userData.subject}&count=${userData.questions}`)
       .then(res => res.json())
@@ -75,7 +75,8 @@
     function submitTest() {
       clearInterval(timer);
       let score = 0;
-      loadedQuestions.forEach((q, i) => {
+      loadedQuestions.forEach((q, i) => 
+        {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
         if (selected && selected.value === q.answer) {
           score++;
