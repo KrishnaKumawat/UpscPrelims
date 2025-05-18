@@ -52,6 +52,8 @@
   </table>
 
   <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzmsThdloSlIvIgwCDstlFXof-boKjSvKbG0ac0kb45RhII4xo6kJRYFGPE239XcfxA/exec';
+    
     document.getElementById('userForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const userData = {
@@ -64,7 +66,7 @@
       window.location.href = 'questions.html';
     });
 
-    fetch('YOUR_GOOGLE_SCRIPT_URL')
+    fetch(scriptURL)
       .then(res => res.json())
       .then(data => {
         const tableBody = document.querySelector('#resultsTable tbody');
