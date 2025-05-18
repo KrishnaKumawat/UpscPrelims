@@ -1,0 +1,32 @@
+<!-- result.html (Result Page) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your UPSC Result</title>
+  <style>
+    body { font-family: Georgia, serif; background: #f3f4f6; padding: 2rem; text-align: center; }
+    h1 { color: #1e3a8a; }
+    #result { margin-top: 2rem; padding: 1.5rem; background: #e0f2fe; border: 1px solid #60a5fa; border-radius: 10px; display: inline-block; }
+    p { font-size: 1.2rem; margin: 0.5rem 0; }
+    a { margin: 1rem; display: inline-block; color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>🎉 Test Completed!</h1>
+  <div id="result"></div>
+  <a href="index.html">🔙 Back to Home</a>
+  <a href="questions.html">🔄 Try Another Test</a>
+
+  <script>
+    const result = JSON.parse(localStorage.getItem('mockResult'));
+    document.getElementById('result').innerHTML = `
+      <p><strong>📘 Subject:</strong> ${result.subject}</p>
+      <p><strong>✅ Score:</strong> ${result.score} / ${result.questions}</p>
+      <p><strong>⏱ Time Taken:</strong> ${result.time} minutes</p>
+    `;
+  </script>
+</body>
+</html>
