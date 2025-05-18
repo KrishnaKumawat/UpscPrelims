@@ -1,205 +1,192 @@
+<!-- index.html (Landing Page) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPSC Mock Test Portal</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 2rem;
-        }
-        .header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .form-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        .results-table {
-            margin-top: 2rem;
-        }
-        .loading {
-            text-align: center;
-            padding: 2rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPSC Mock Test - Start</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(#f0f4ff, #dce3ff); padding: 2rem; text-align: center; }
+    h1 { font-size: 2.5rem; color: #2b3a67; }
+    form { max-width: 400px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    input, select, button { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #2b3a67; color: white; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #1f2a4c; }
+    table { margin-top: 2rem; width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 0.75rem; text-align: center; }
+    th { background: #2b3a67; color: white; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="display-4">UPSC Mock Test Portal</h1>
-            <p class="lead">Test your knowledge with subject-wise mock tests</p>
-        </div>
+  <h1>🎯 UPSC Mock Test Portal</h1>
+  <form id="userForm">
+    <input type="text" id="name" placeholder="👤 Enter Your Name" required>
+    <select id="subject" required>
+      <option value="">📚 Select Subject</option>
+      <option value="History">History</option>
+      <option value="Geography">Geography</option>
+      <option value="Polity">Polity</option>
+    </select>
+    <select id="questions">
+      <option value="5">📝 5 Questions</option>
+      <option value="10">📝 10 Questions</option>
+      <option value="20">📝 20 Questions</option>
+    </select>
+    <select id="time">
+      <option value="5">⏱ 5 Minutes</option>
+      <option value="10">⏱ 10 Minutes</option>
+      <option value="30">⏱ 30 Minutes</option>
+    </select>
+    <button type="submit">🚀 Start Test</button>
+  </form>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-card">
-                    <h2 class="mb-4">Start a New Test</h2>
-                    <form id="testForm">
-                        <div class="mb-3">
-                            <label for="userName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="userName" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="subject" class="form-label">Select Subject</label>
-                            <select class="form-select" id="subject" required>
-                                <option value="" selected disabled>Choose a subject</option>
-                                <option value="History">History</option>
-                                <option value="Geography">Geography</option>
-                                <option value="Polity">Polity</option>
-                                <option value="Economics">Economics</option>
-                                <option value="Environment">Environment</option>
-                                <option value="Science">Science & Technology</option>
-                                <option value="Current Affairs">Current Affairs</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="questionCount" class="form-label">Number of Questions</label>
-                            <select class="form-select" id="questionCount" required>
-                                <option value="5">5 Questions</option>
-                                <option value="10" selected>10 Questions</option>
-                                <option value="20">20 Questions</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="timeLimit" class="form-label">Time Limit</label>
-                            <select class="form-select" id="timeLimit" required>
-                                <option value="5">5 Minutes</option>
-                                <option value="10" selected>10 Minutes</option>
-                                <option value="30">30 Minutes</option>
-                            </select>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100">Start Test</button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="form-card">
-                    <h2 class="mb-4">Previous Results</h2>
-                    <div id="resultsContainer">
-                        <div class="loading" id="loadingResults">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2">Loading previous results...</p>
-                        </div>
-                        <div class="table-responsive results-table" id="resultsTableContainer" style="display: none;">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Subject</th>
-                                        <th>Score</th>
-                                        <th>Questions</th>
-                                        <th>Time (min)</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resultsTableBody">
-                                    <!-- Results will be inserted here -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="noResults" style="display: none;">
-                            <p class="text-center">No previous results found.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // Google Apps Script Web App URL (to be replaced with your actual deployed script URL)
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec"; 
-        
-        // Event listener for form submission
-        document.getElementById("testForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const userData = {
-                name: document.getElementById("userName").value,
-                subject: document.getElementById("subject").value,
-                questionCount: document.getElementById("questionCount").value,
-                timeLimit: document.getElementById("timeLimit").value
-            };
-            
-            // Store user data in localStorage
-            localStorage.setItem("mockTestUserData", JSON.stringify(userData));
-            
-            // Redirect to questions page
-            window.location.href = "questions.html";
+  <h2>📊 Previous Results</h2>
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Name</th><th>Subject</th><th>Score</th><th>Time</th><th>Questions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    document.getElementById('userForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const userData = {
+        name: document.getElementById('name').value,
+        subject: document.getElementById('subject').value,
+        questions: document.getElementById('questions').value,
+        time: document.getElementById('time').value
+      };
+      localStorage.setItem('mockUserData', JSON.stringify(userData));
+      window.location.href = 'questions.html';
+    });
+
+    fetch('YOUR_GOOGLE_SCRIPT_URL')
+      .then(res => res.json())
+      .then(data => {
+        const tableBody = document.querySelector('#resultsTable tbody');
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${row.name}</td><td>${row.subject}</td><td>${row.score}</td><td>${row.time}</td><td>${row.questions}</td>`;
+          tableBody.appendChild(tr);
         });
-        
-        // Function to fetch previous results
-        function fetchPreviousResults() {
-            document.getElementById("loadingResults").style.display = "block";
-            document.getElementById("resultsTableContainer").style.display = "none";
-            document.getElementById("noResults").style.display = "none";
-            
-            // Fetch data from Google Apps Script
-            fetch(SCRIPT_URL + "?action=getResults")
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById("loadingResults").style.display = "none";
-                    
-                    if (data && data.length > 0) {
-                        // Display results in the table
-                        document.getElementById("resultsTableContainer").style.display = "block";
-                        
-                        const tableBody = document.getElementById("resultsTableBody");
-                        tableBody.innerHTML = ""; // Clear existing results
-                        
-                        // Sort by date (newest first)
-                        data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                        
-                        // Take only the most recent 10 results
-                        const recentResults = data.slice(0, 10);
-                        
-                        recentResults.forEach(result => {
-                            const row = document.createElement("tr");
-                            
-                            // Format the date
-                            const date = new Date(result.timestamp);
-                            const formattedDate = `${date.toLocaleDateString()}`;
-                            
-                            row.innerHTML = `
-                                <td>${result.name}</td>
-                                <td>${result.subject}</td>
-                                <td>${result.score}</td>
-                                <td>${result.correct}/${result.total}</td>
-                                <td>${result.timeTaken}</td>
-                                <td>${formattedDate}</td>
-                            `;
-                            
-                            tableBody.appendChild(row);
-                        });
-                    } else {
-                        document.getElementById("noResults").style.display = "block";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching results:", error);
-                    document.getElementById("loadingResults").style.display = "none";
-                    document.getElementById("noResults").style.display = "block";
-                    document.getElementById("noResults").innerHTML = "<p class='text-center text-danger'>Error loading results. Please try again later.</p>";
-                });
-        }
-        
-        // Fetch results when page loads
-        window.addEventListener("load", fetchPreviousResults);
-    </script>
+      });
+  </script>
+</body>
+</html>
+
+<!-- questions.html (Question Page) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Answer UPSC Questions</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fffef5; padding: 2rem; }
+    h1 { color: #37474F; text-align: center; }
+    #questionContainer { margin: 2rem auto; max-width: 600px; }
+    .question-block { margin-bottom: 1.5rem; padding: 1rem; background: #f1f8e9; border-left: 5px solid #689f38; border-radius: 5px; }
+    #timer { text-align: center; font-size: 1.2rem; margin: 1rem 0; color: #d32f2f; }
+    button { display: block; margin: 2rem auto; padding: 1rem 2rem; font-size: 1rem; background: #00796B; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #004D40; }
+  </style>
+</head>
+<body>
+  <h1>🧠 UPSC Practice Questions</h1>
+  <div id="questionContainer"></div>
+  <p id="timer">Loading timer...</p>
+  <button id="submitBtn">📤 Submit Answers</button>
+
+  <script>
+    const userData = JSON.parse(localStorage.getItem('mockUserData'));
+    const container = document.getElementById('questionContainer');
+    const total = parseInt(userData.questions);
+    const questions = Array.from({ length: total }, (_, i) => {
+      return { q: `(${i + 1}) Sample question on ${userData.subject}?`, a: 'Answer' };
+    });
+
+    questions.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.classList.add('question-block');
+      div.innerHTML = `<p>${item.q}</p><input type="text" data-index="${index}" placeholder="Your Answer...">`;
+      container.appendChild(div);
+    });
+
+    let timeLeft = userData.time * 60;
+    const timerDisplay = document.getElementById('timer');
+    const timer = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = `⏳ Time Left: ${Math.floor(timeLeft / 60)}:${('0' + (timeLeft % 60)).slice(-2)}`;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        submitTest();
+      }
+    }, 1000);
+
+    document.getElementById('submitBtn').addEventListener('click', submitTest);
+
+    function submitTest() {
+      clearInterval(timer);
+      const answers = document.querySelectorAll('input');
+      const score = Math.floor(Math.random() * (answers.length + 1));
+
+      fetch('YOUR_GOOGLE_SCRIPT_URL', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: userData.name,
+          subject: userData.subject,
+          score: score,
+          time: userData.time,
+          questions: total
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(() => {
+        localStorage.setItem('mockResult', JSON.stringify({
+          score: score,
+          subject: userData.subject,
+          questions: total,
+          time: userData.time
+        }));
+        window.location.href = 'result.html';
+      });
+    }
+  </script>
+</body>
+</html>
+
+<!-- result.html (Result Page) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your UPSC Result</title>
+  <style>
+    body { font-family: Georgia, serif; background: #f3f4f6; padding: 2rem; text-align: center; }
+    h1 { color: #1e3a8a; }
+    #result { margin-top: 2rem; padding: 1.5rem; background: #e0f2fe; border: 1px solid #60a5fa; border-radius: 10px; display: inline-block; }
+    p { font-size: 1.2rem; margin: 0.5rem 0; }
+    a { margin: 1rem; display: inline-block; color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>🎉 Test Completed!</h1>
+  <div id="result"></div>
+  <a href="index.html">🔙 Back to Home</a>
+  <a href="questions.html">🔄 Try Another Test</a>
+
+  <script>
+    const result = JSON.parse(localStorage.getItem('mockResult'));
+    document.getElementById('result').innerHTML = `
+      <p><strong>📘 Subject:</strong> ${result.subject}</p>
+      <p><strong>✅ Score:</strong> ${result.score} / ${result.questions}</p>
+      <p><strong>⏱ Time Taken:</strong> ${result.time} minutes</p>
+    `;
+  </script>
 </body>
 </html>
