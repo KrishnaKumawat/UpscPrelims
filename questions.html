@@ -1,54 +1,19 @@
+<!-- questions.html (Question Page) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Answer UPSC Questions</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fffef5;
-      padding: 2rem;
-    }
-    h1 {
-      color: #37474F;
-      text-align: center;
-    }
-    #questionContainer {
-      margin: 2rem auto;
-      max-width: 600px;
-    }
-    .question-block {
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: #f1f8e9;
-      border-left: 5px solid #689f38;
-      border-radius: 5px;
-    }
-    .options label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    #timer {
-      text-align: center;
-      font-size: 1.2rem;
-      margin: 1rem 0;
-      color: #d32f2f;
-    }
-    button {
-      display: block;
-      margin: 2rem auto;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      background: #00796B;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #004D40;
-    }
+    body { font-family: Arial, sans-serif; background: #fffef5; padding: 2rem; }
+    h1 { color: #37474F; text-align: center; }
+    #questionContainer { margin: 2rem auto; max-width: 600px; }
+    .question-block { margin-bottom: 1.5rem; padding: 1rem; background: #f1f8e9; border-left: 5px solid #689f38; border-radius: 5px; }
+    .options label { display: block; margin-bottom: 0.5rem; }
+    #timer { text-align: center; font-size: 1.2rem; margin: 1rem 0; color: #d32f2f; }
+    button { display: block; margin: 2rem auto; padding: 1rem 2rem; font-size: 1rem; background: #00796B; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #004D40; }
   </style>
 </head>
 <body>
@@ -63,12 +28,8 @@
     const total = parseInt(userData.questions);
     let loadedQuestions = [];
 
-    // ✅ Use your real script ID
     const scriptURL = 'https://script.google.com/macros/s/AKfycbw_XxdV-OE54A2kocUvhj9L2H9lHDaugEErfbSOFWbQgu2S5kcCj7lGU3YPifAR7MK8/exec';
 
-
-
-    // ✅ Fetch questions from Google Sheets Apps Script
     fetch(`${scriptURL}?subject=${userData.subject}&count=${userData.questions}`)
       .then(res => res.json())
       .then(data => {
@@ -111,44 +72,40 @@
 
     document.getElementById('submitBtn').addEventListener('click', submitTest);
 
-function submitTest() {
-  clearInterval(timer);
+    function submitTest() {
+      clearInterval(timer);
+      let score = 0;
+      loadedQuestions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name=q${i}]:checked`);
+        if (selected && selected.value === q.answer) {
+          score++;
+        }
+      });
 
-  let score = 0;
-  loadedQuestions.forEach((q, i) => {
-    const selected = document.querySelector(`input[name=q${i}]:checked`);
-    if (selected && selected.value === q.answer) {
-      score++;
+      const resultData = {
+        name: userData.name,
+        subject: userData.subject,
+        score: score,
+        total: total,
+        time: userData.time
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(resultData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(() => {
+        localStorage.setItem('mockResult', JSON.stringify(resultData));
+        window.location.href = 'result.html';
+      })
+      .catch(error => {
+        alert('❌ Failed to submit your test result. Please try again.');
+        console.error('Submission error:', error);
+      });
     }
-  });
-
-  const resultData = {
-    name: userData.name,
-    subject: userData.subject,
-    score: score,
-    total: total,              // ✅ renamed from 'questions' to 'total'
-    time: userData.time
-  };
-
-  // Send result to Google Sheets via Apps Script
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify(resultData),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(() => {
-    // Store locally for result.html
-    localStorage.setItem('mockResult', JSON.stringify(resultData));
-    window.location.href = 'result.html';
-  })
-  .catch(error => {
-    alert('❌ Failed to submit your test result. Please try again.');
-    console.error('Submission error:', error);
-  });
-}
-
   </script>
 </body>
 </html>
