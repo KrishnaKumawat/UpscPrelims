@@ -109,39 +109,44 @@
 
     document.getElementById('submitBtn').addEventListener('click', submitTest);
 
-    function submitTest() {
-      clearInterval(timer);
-      let score = 0;
-      loadedQuestions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name=q${i}]:checked`);
-        if (selected && selected.value === q.answer) {
-          score++;
-        }
-      });
+function submitTest() {
+  clearInterval(timer);
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({
-          name: userData.name,
-          subject: userData.subject,
-          score: score,
-          time: userData.time,
-          questions: total
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      }).then(() => {
-        localStorage.setItem('mockResult', JSON.stringify({
-          score: score,
-          subject: userData.subject,
-          questions: total,
-          time: userData.time
-        }));
-        window.location.href = 'result.html';
-      }).catch(error => {
-        alert('Failed to submit results. Please try again.');
-        console.error('Submission error:', error);
-      });
+  let score = 0;
+  loadedQuestions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name=q${i}]:checked`);
+    if (selected && selected.value === q.answer) {
+      score++;
     }
+  });
+
+  const resultData = {
+    name: userData.name,
+    subject: userData.subject,
+    score: score,
+    total: total,              // ✅ renamed from 'questions' to 'total'
+    time: userData.time
+  };
+
+  // Send result to Google Sheets via Apps Script
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify(resultData),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(() => {
+    // Store locally for result.html
+    localStorage.setItem('mockResult', JSON.stringify(resultData));
+    window.location.href = 'result.html';
+  })
+  .catch(error => {
+    alert('❌ Failed to submit your test result. Please try again.');
+    console.error('Submission error:', error);
+  });
+}
+
   </script>
 </body>
 </html>
