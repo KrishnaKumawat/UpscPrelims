@@ -1,32 +1,67 @@
-<!-- result.html (Result Page) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your UPSC Result</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UPSC Mock Test Result</title>
   <style>
-    body { font-family: Georgia, serif; background: #f3f4f6; padding: 2rem; text-align: center; }
-    h1 { color: #1e3a8a; }
-    #result { margin-top: 2rem; padding: 1.5rem; background: #e0f2fe; border: 1px solid #60a5fa; border-radius: 10px; display: inline-block; }
-    p { font-size: 1.2rem; margin: 0.5rem 0; }
-    a { margin: 1rem; display: inline-block; color: #2563eb; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
+    #resultBox {
+      margin: 0 auto;
+      padding: 2rem;
+      background: #e0f2fe;
+      border: 2px solid #38bdf8;
+      border-radius: 10px;
+      max-width: 500px;
+    }
+    p {
+      font-size: 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .btn {
+      display: inline-block;
+      margin: 1.5rem 1rem 0;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 6px;
+      background: #1d4ed8;
+      color: white;
+    }
+    .btn:hover {
+      background: #2563eb;
+    }
   </style>
 </head>
 <body>
   <h1>🎉 Test Completed!</h1>
-  <div id="result"></div>
-  <a href="index.html">🔙 Back to Home</a>
-  <a href="questions.html">🔄 Try Another Test</a>
+  <div id="resultBox"></div>
+  <a href="index.html" class="btn">🏠 Back to Home</a>
+  <a href="questions.html" class="btn">🔁 Try Another Test</a>
 
   <script>
     const result = JSON.parse(localStorage.getItem('mockResult'));
-    document.getElementById('result').innerHTML = `
-      <p><strong>📘 Subject:</strong> ${result.subject}</p>
-      <p><strong>✅ Score:</strong> ${result.score} / ${result.questions}</p>
-      <p><strong>⏱ Time Taken:</strong> ${result.time} minutes</p>
-    `;
+
+    if (result) {
+      document.getElementById('resultBox').innerHTML = `
+        <p><strong>📘 Subject:</strong> ${result.subject}</p>
+        <p><strong>✅ Score:</strong> ${result.score} / ${result.questions}</p>
+        <p><strong>⏱ Time Taken:</strong> ${result.time} minutes</p>
+      `;
+    } else {
+      document.getElementById('resultBox').innerHTML = `
+        <p style="color: red;">No result data found. Please take a test first.</p>
+      `;
+    }
   </script>
 </body>
 </html>
