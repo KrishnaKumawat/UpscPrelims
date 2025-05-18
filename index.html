@@ -45,7 +45,12 @@
   <table id="resultsTable">
     <thead>
       <tr>
-        <th>Name</th><th>Subject</th><th>Score</th><th>Time</th><th>Questions</th>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Score</th>
+        <th>Attempted</th>
+        <th>Total</th>
+        <th>Time</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -53,7 +58,7 @@
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyAeOxLFmhT1yjp-jAzXLtNQni7jFONcQAoQFvn6Fhds7CmRHFFW7BwC1Lt4W1rTAqd/exec';
-    
+
     document.getElementById('userForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const userData = {
@@ -72,12 +77,17 @@
         const tableBody = document.querySelector('#resultsTable tbody');
         data.forEach(row => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${row.name}</td><td>${row.subject}</td><td>${row.score}</td><td>${row.time}</td><td>${row.questions}</td>`;
+          tr.innerHTML = `
+            <td>${row.name}</td>
+            <td>${row.subject}</td>
+            <td>${row.score}</td>
+            <td>${row.attempted}</td>
+            <td>${row.total}</td>
+            <td>${row.time}</td>
+          `;
           tableBody.appendChild(tr);
         });
       });
   </script>
 </body>
 </html>
-
-
