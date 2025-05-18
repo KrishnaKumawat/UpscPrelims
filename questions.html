@@ -72,7 +72,7 @@
       const selected = document.querySelectorAll('input[type=radio]:checked');
       const score = selected.length; // dummy logic: count how many attempted
 
-      fetch('YOUR_GOOGLE_SCRIPT_URL', {
+      fetch('https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec', {
         method: 'POST',
         body: JSON.stringify({
           name: userData.name,
