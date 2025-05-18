@@ -74,22 +74,27 @@
 
     function submitTest() {
       clearInterval(timer);
+      let attempted = 0;
       let score = 0;
-      loadedQuestions.forEach((q, i) => 
-        {
-        const selected = document.querySelector(`input[name=q${i}]:checked`);
-        if (selected && selected.value === q.answer) {
-          score++;
-        }
-      });
 
-      const resultData = {
-        name: userData.name,
-        subject: userData.subject,
-        score: score,
-        total: total,
-        time: userData.time
-      };
+  loadedQuestions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name=q${i}]:checked`);
+    if (selected) {
+      attempted++;
+      if (selected.value === q.answer) {
+        score++;
+      }
+    }
+  });
+  
+  const resultData = {
+    name: userData.name,
+    subject: userData.subject,
+    score: score,
+    total: total,
+    attempted: attempted,
+    time: userData.time
+  };
 
       fetch(scriptURL, {
         method: 'POST',
