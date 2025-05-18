@@ -28,7 +28,7 @@
     const total = parseInt(userData.questions);
     let loadedQuestions = [];
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyAeOxLFmhT1yjp-jAzXLtNQni7jFONcQAoQFvn6Fhds7CmRHFFW7BwC1Lt4W1rTAqd/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyTb699oOmIeG11ZrOH_Qz-a1nwoV21LQTmaH9vQnwqWT9ROn_QhPcfTfOzF3-6W0Pk/exec';
 
     fetch(`${scriptURL}?subject=${userData.subject}&count=${userData.questions}`)
       .then(res => res.json())
