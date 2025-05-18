@@ -1,59 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>UPSC Mock Test - Home</title>
-  <style>
-    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
-    h1, h2 { text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 10px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Mock Test Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+        }
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .form-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .results-table {
+            margin-top: 2rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
 </head>
 <body>
-  <h1>UPSC Mock Test</h1>
-  <input type="text" id="studentName" placeholder="Enter your name" required>
-  <select id="subject">
-    <option value="">Select Subject</option>
-    <option value="History">History</option>
-    <option value="Geography">Geography</option>
-    <option value="Polity">Polity</option>
-    <option value="Economics">Economics</option>
-  </select>
-  <button onclick="startTest()">Start Test</button>
+    <div class="container">
+        <div class="header">
+            <h1 class="display-4">UPSC Mock Test Portal</h1>
+            <p class="lead">Test your knowledge with subject-wise mock tests</p>
+        </div>
 
-  <h2>Previous Results</h2>
-  <table id="resultsTable">
-    <thead><tr><th>Name</th><th>Subject</th><th>Score</th></tr></thead>
-    <tbody></tbody>
-  </table>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-card">
+                    <h2 class="mb-4">Start a New Test</h2>
+                    <form id="testForm">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Select Subject</label>
+                            <select class="form-select" id="subject" required>
+                                <option value="" selected disabled>Choose a subject</option>
+                                <option value="History">History</option>
+                                <option value="Geography">Geography</option>
+                                <option value="Polity">Polity</option>
+                                <option value="Economics">Economics</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Science">Science & Technology</option>
+                                <option value="Current Affairs">Current Affairs</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="questionCount" class="form-label">Number of Questions</label>
+                            <select class="form-select" id="questionCount" required>
+                                <option value="5">5 Questions</option>
+                                <option value="10" selected>10 Questions</option>
+                                <option value="20">20 Questions</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="timeLimit" class="form-label">Time Limit</label>
+                            <select class="form-select" id="timeLimit" required>
+                                <option value="5">5 Minutes</option>
+                                <option value="10" selected>10 Minutes</option>
+                                <option value="30">30 Minutes</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Start Test</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-card">
+                    <h2 class="mb-4">Previous Results</h2>
+                    <div id="resultsContainer">
+                        <div class="loading" id="loadingResults">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading previous results...</p>
+                        </div>
+                        <div class="table-responsive results-table" id="resultsTableContainer" style="display: none;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Subject</th>
+                                        <th>Score</th>
+                                        <th>Questions</th>
+                                        <th>Time (min)</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                    <!-- Results will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noResults" style="display: none;">
+                            <p class="text-center">No previous results found.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzMHTd8rblI3fvl8SGhh_PaCJK_fYdWyazGu083a1HzGqm793ExrX0h8DjCOHGT_niW/exec';
-
-    function startTest() {
-      const name = document.getElementById('studentName').value;
-      const subject = document.getElementById('subject').value;
-      if (!name || !subject) return alert("Please enter your name and select a subject.");
-      localStorage.setItem("studentName", name);
-      localStorage.setItem("subject", subject);
-      window.location.href = "https://krishnakumawat.github.io/UpscPrelims/Questions.html"; // Use relative path for GitHub Pages compatibility
-    }
-
-    function loadResults() {
-      fetch(scriptURL)
-        .then(res => res.json())
-        .then(data => {
-          const tbody = document.querySelector("#resultsTable tbody");
-          tbody.innerHTML = "";
-          data.forEach(row => {
-            tbody.innerHTML += `<tr><td>${row.name}</td><td>${row.subject}</td><td>${row.score}</td></tr>`;
-          });
+    <script>
+        // Google Apps Script Web App URL (to be replaced with your actual deployed script URL)
+        const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+        
+        // Event listener for form submission
+        document.getElementById("testForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const userData = {
+                name: document.getElementById("userName").value,
+                subject: document.getElementById("subject").value,
+                questionCount: document.getElementById("questionCount").value,
+                timeLimit: document.getElementById("timeLimit").value
+            };
+            
+            // Store user data in localStorage
+            localStorage.setItem("mockTestUserData", JSON.stringify(userData));
+            
+            // Redirect to questions page
+            window.location.href = "questions.html";
         });
-    }
-
-    window.onload = loadResults;
-  </script>
+        
+        // Function to fetch previous results
+        function fetchPreviousResults() {
+            document.getElementById("loadingResults").style.display = "block";
+            document.getElementById("resultsTableContainer").style.display = "none";
+            document.getElementById("noResults").style.display = "none";
+            
+            // Fetch data from Google Apps Script
+            fetch(SCRIPT_URL + "?action=getResults")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("loadingResults").style.display = "none";
+                    
+                    if (data && data.length > 0) {
+                        // Display results in the table
+                        document.getElementById("resultsTableContainer").style.display = "block";
+                        
+                        const tableBody = document.getElementById("resultsTableBody");
+                        tableBody.innerHTML = ""; // Clear existing results
+                        
+                        // Sort by date (newest first)
+                        data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                        
+                        // Take only the most recent 10 results
+                        const recentResults = data.slice(0, 10);
+                        
+                        recentResults.forEach(result => {
+                            const row = document.createElement("tr");
+                            
+                            // Format the date
+                            const date = new Date(result.timestamp);
+                            const formattedDate = `${date.toLocaleDateString()}`;
+                            
+                            row.innerHTML = `
+                                <td>${result.name}</td>
+                                <td>${result.subject}</td>
+                                <td>${result.score}</td>
+                                <td>${result.correct}/${result.total}</td>
+                                <td>${result.timeTaken}</td>
+                                <td>${formattedDate}</td>
+                            `;
+                            
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        document.getElementById("noResults").style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching results:", error);
+                    document.getElementById("loadingResults").style.display = "none";
+                    document.getElementById("noResults").style.display = "block";
+                    document.getElementById("noResults").innerHTML = "<p class='text-center text-danger'>Error loading results. Please try again later.</p>";
+                });
+        }
+        
+        // Fetch results when page loads
+        window.addEventListener("load", fetchPreviousResults);
+    </script>
 </body>
 </html>
